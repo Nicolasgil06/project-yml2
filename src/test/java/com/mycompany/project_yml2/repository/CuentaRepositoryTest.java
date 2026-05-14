@@ -3,6 +3,7 @@ package com.mycompany.project_yml2.repository;
 import com.mycompany.project_yml2.domain.Cliente;
 import com.mycompany.project_yml2.domain.Cuenta;
 import com.mycompany.project_yml2.domain.TipoDocumento;
+import com.mycompany.project_yml2.domain.TipoDocumentoEmbedded;
 import com.mycompany.project_yml2.domain.enumeracion.Estado;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataMongoTest
-
 class CuentaRepositoryTest {
 
     @Autowired
@@ -30,23 +30,24 @@ class CuentaRepositoryTest {
 
     @Test
     void insert(){
-        mongoTemplate.dropCollection(Cliente.class);
-        mongoTemplate.dropCollection(Cuenta .class);
+        clienteRepository.deleteAll();
+        cuentaRepository.deleteAll();
         tipoDocumentoRepository.deleteAll();
 
         TipoDocumento tipoDocumentoCedula = tipoDocumentoRepository.insert(
                 new TipoDocumento(null, "CC", "Cedula de ciudadania", Estado.ACTIVO)
         );
 
-
         assertNotNull(tipoDocumentoCedula);
 
         Cliente cliente = new Cliente(null, "123456789", "John", "Doe", "Smith", "Johnson");
-        Cliente cliente2 = new Cliente(null, "987654321", "Doe", "John", "Johnson", "Smith");
+        Cliente cliente2 = new Cliente(null, "1234567890", "John", "Doe", "Smith", "Johnson");
+        //Cliente cliente2 = new Cliente(null, "99999", "John", "Doe", "Smith", "Johnson");
 
+        TipoDocumentoEmbedded tipoDocumentoEmbedded = new TipoDocumentoEmbedded(tipoDocumentoCedula.getSigla(), tipoDocumentoCedula.getNombreDocumento());
 
-        cliente.setTipoDocumento(tipoDocumentoCedula);
-        cliente2.setTipoDocumento(tipoDocumentoCedula);
+        cliente.setTipoDocumentoEmbedded(tipoDocumentoEmbedded);
+        cliente2.setTipoDocumentoEmbedded(tipoDocumentoEmbedded);
 
         Cliente clienteGuardado = clienteRepository.insert(cliente);
         Cliente clienteGuardado2 = clienteRepository.insert(cliente2);
@@ -60,6 +61,9 @@ class CuentaRepositoryTest {
         cuentaRepository.insert(cuenta01);
         cuentaRepository.insert(cuenta02);
 
+
     }
+
+
 
 }

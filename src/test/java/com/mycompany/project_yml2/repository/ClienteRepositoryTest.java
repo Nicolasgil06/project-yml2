@@ -25,31 +25,35 @@ class ClienteRepositoryTest {
 
     @Test
     void insert() {
-
         mongoTemplate.dropCollection(Cliente.class);
-        tipoDocumentoRepository.deleteAll();
+        mongoTemplate.dropCollection(TipoDocumento.class);
 
         TipoDocumento tipoDocumentoCedula = tipoDocumentoRepository.insert(
                 new TipoDocumento(null, "CC", "Cedula de ciudadania", Estado.ACTIVO)
         );
 
         Cliente cliente = new Cliente(null, "123456789", "John", "Doe", "Smith", "Johnson");
-        Cliente cliente2 = new Cliente(null, "987654321", "Doe", "John", "Johnson", "Smith");
+        Cliente cliente2 = new Cliente(null, "1234567890", "John", "Doe", "Smith", "Johnson");
+        //Cliente cliente2 = new Cliente(null, "99999", "John", "Doe", "Smith", "Johnson");
 
         assertNotNull(tipoDocumentoCedula);
 
-        cliente.setTipoDocumento(tipoDocumentoCedula);
-        cliente2.setTipoDocumento(tipoDocumentoCedula);
+        TipoDocumentoEmbedded tipoDocumentoEmbedded = new TipoDocumentoEmbedded(tipoDocumentoCedula.getSigla(), tipoDocumentoCedula.getNombreDocumento());
+
+        cliente.setTipoDocumentoEmbedded(tipoDocumentoEmbedded);
+        cliente2.setTipoDocumentoEmbedded(tipoDocumentoEmbedded);
 
         Cliente clienteGuardado = clienteRepository.insert(cliente);
         Cliente clienteGuardado2 = clienteRepository.insert(cliente2);
 
         assertNotNull(clienteGuardado.getId());
         assertNotNull(clienteGuardado2.getId());
-        assertNotNull(clienteGuardado.getTipoDocumento());
-        assertNotNull(clienteGuardado2.getTipoDocumento());
-        assertEquals("CC", clienteGuardado.getTipoDocumento().getSigla());
-        assertEquals("CC", clienteGuardado2.getTipoDocumento().getSigla());
+        assertNotNull(clienteGuardado.getTipoDocumentoEmbedded());
+        assertNotNull(clienteGuardado2.getTipoDocumentoEmbedded());
+        assertEquals("CC", clienteGuardado.getTipoDocumentoEmbedded().getSigla());
+        assertEquals("CC", clienteGuardado2.getTipoDocumentoEmbedded().getSigla());
         assertEquals(2, clienteRepository.count());
+
     }
+
 }

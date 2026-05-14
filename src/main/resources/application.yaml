@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: project-yml2
+
+  mongodb:
+    host: localhost
+    port: 27017
+    database: ejemplo01
+  data:
+
+    mongodb:
+      auto-index-creation: true

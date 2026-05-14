@@ -1,0 +1,88 @@
+package com.mycompany.project_yml2.domain;
+
+import com.mycompany.project_yml2.domain.enumeracion.Estado;
+import jakarta.annotation.Nonnull;
+import jakarta.validation.constraints.Size;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
+@Document(collection = "tipo_documento")
+public class TipoDocumento implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    @Id //indica que este campo es el identificador único del documento en MongoDB
+    private String id;
+
+    @Nonnull
+    @Indexed(unique = true)
+    @Field("sigla")
+    @Size(max = 10)
+    private String sigla;
+
+    @Nonnull
+    @Field("nombre_documento")
+    @Size(max = 100)
+    @Indexed(unique = true, name = "idx_unique_nombre_documento")
+    private String nombreDocumento;
+
+    @Nonnull
+    @Field("estado")
+    private Estado estado;
+
+    @DBRef
+    @Field("clientes")
+    private Set<Cliente> clientes = new HashSet<>();
+
+    public TipoDocumento(String id, @Nonnull String sigla, @Nonnull String nombreDocumento, @Nonnull Estado estado) {
+        this.id = id;
+        this.sigla = sigla;
+        this.nombreDocumento = nombreDocumento;
+        this.estado = estado;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Nonnull
+    public String getSigla() {
+        return sigla;
+    }
+
+    public void setSigla(@Nonnull String sigla) {
+        this.sigla = sigla;
+    }
+
+    @Nonnull
+    public String getNombreDocumento() {
+        return nombreDocumento;
+    }
+
+    public void setNombreDocumento(@Nonnull String nombreDocumento) {
+        this.nombreDocumento = nombreDocumento;
+    }
+
+    @Nonnull
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(@Nonnull Estado estado) {
+        this.estado = estado;
+    }
+}
+

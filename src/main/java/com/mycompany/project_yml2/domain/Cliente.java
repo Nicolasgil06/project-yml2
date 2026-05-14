@@ -1,6 +1,5 @@
 package com.mycompany.project_yml2.domain;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.annotation.Nonnull;
 import jakarta.validation.constraints.Size;
@@ -12,7 +11,9 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serial;
 import java.io.Serializable;
-
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Document(collection = "cliente")
 public class Cliente implements Serializable {
@@ -33,11 +34,11 @@ public class Cliente implements Serializable {
     @Field("primer_nombre")
     private String primerNombre;
 
-    @Nonnull
     @Size(max = 50)
     @Field("segundo_nombre")
     private String segundoNombre;
 
+    @Nonnull
     @Size(max = 50)
     @Field("primer_apellido")
     private String primerApellido;
@@ -48,17 +49,16 @@ public class Cliente implements Serializable {
 
     @DBRef
     @Field("tipo_documento")
-    @JsonIgnoreProperties(value = "clientes", allowSetters = true)
+    @JsonIgnoreProperties(value = { "clientes" }, allowSetters = true)
     private TipoDocumento tipoDocumento;
-
 
     @DocumentReference
     @Field("cuenta")
     private Cuenta cuenta;
 
+    private Set<Factura> facturaSet = new HashSet<>();
 
-
-    public Cliente(String id, @Nonnull String numeroDocumento, String primerNombre, String segundoNombre, String primerApellido, String segundoApelligo) {
+    public Cliente(String id, @Nonnull String numeroDocumento, @Nonnull String primerNombre, String segundoNombre, @Nonnull String primerApellido, String segundoApelligo) {
         this.id = id;
         this.numeroDocumento = numeroDocumento;
         this.primerNombre = primerNombre;
@@ -84,21 +84,19 @@ public class Cliente implements Serializable {
         this.numeroDocumento = numeroDocumento;
     }
 
-    @Nonnull
     public String getPrimerNombre() {
         return primerNombre;
     }
 
-    public void setPrimerNombre(@Nonnull String primerNombre) {
+    public void setPrimerNombre(String primerNombre) {
         this.primerNombre = primerNombre;
     }
 
-    @Nonnull
     public String getSegundoNombre() {
         return segundoNombre;
     }
 
-    public void setSegundoNombre(@Nonnull String segundoNombre) {
+    public void setSegundoNombre(String segundoNombre) {
         this.segundoNombre = segundoNombre;
     }
 
@@ -132,5 +130,25 @@ public class Cliente implements Serializable {
 
     public void setCuenta(Cuenta cuenta) {
         this.cuenta = cuenta;
+    }
+
+    public Set<Factura> getFacturaSet() {
+        return facturaSet;
+    }
+
+    public void setFacturaSet(Set<Factura> facturaSet) {
+        this.facturaSet = facturaSet;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof Cliente cliente)) return false;
+
+        return Objects.equals(id, cliente.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

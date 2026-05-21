@@ -7,9 +7,14 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.io.Serial;
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Cuenta implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     private String id;
@@ -65,5 +70,17 @@ public class Cuenta implements Serializable {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof Cuenta cuenta)) return false;
+
+        return Objects.equals(id, cuenta.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

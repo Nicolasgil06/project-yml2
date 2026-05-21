@@ -2,7 +2,6 @@ package com.mycompany.project_yml2.repository;
 
 import com.mycompany.project_yml2.domain.Cliente;
 import com.mycompany.project_yml2.domain.TipoDocumento;
-import com.mycompany.project_yml2.domain.TipoDocumentoEmbedded;
 import com.mycompany.project_yml2.domain.enumeracion.Estado;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,6 @@ class ClienteRepositoryTest {
 
     @Test
     void insert() {
-
         mongoTemplate.dropCollection(Cliente.class);
         tipoDocumentoRepository.deleteAll();
 
@@ -34,7 +32,7 @@ class ClienteRepositoryTest {
         );
 
         Cliente cliente = new Cliente(null, "123456789", "John", "Doe", "Smith", "Johnson");
-        Cliente cliente2 = new Cliente(null, "987654321", "Doe", "John", "Johnson", "Smith");
+        Cliente cliente2 = new Cliente(null, "99999", "John", "Doe", "Smith", "Johnson");
 
         assertNotNull(tipoDocumentoCedula);
 
@@ -51,5 +49,7 @@ class ClienteRepositoryTest {
         assertEquals("CC", clienteGuardado.getTipoDocumento().getSigla());
         assertEquals("CC", clienteGuardado2.getTipoDocumento().getSigla());
         assertEquals(2, clienteRepository.count());
+
     }
+
 }

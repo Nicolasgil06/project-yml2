@@ -12,19 +12,20 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-@Document(collection = "tipo_documento")
+@Document(collection = "tipo_documento") // esta anotaacoin indicando que clase va se un documento en mongo
 public class TipoDocumento implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @Id //indica que este campo es el identificador único del documento en MongoDB
+    @Id // indica que este campo es el identificador unico del documento en mongo
     private String id;
 
     @Nonnull
-    @Indexed(unique = true)
+    @Indexed(unique = true, name = "idx_unique_sigla") // crea un indice unico en mongo para este campo
     @Field("sigla")
     @Size(max = 10)
     private String sigla;
@@ -39,7 +40,7 @@ public class TipoDocumento implements Serializable {
     @Field("estado")
     private Estado estado;
 
-    @DBRef
+    @DBRef // indica que este campo es una referencia a otro documento en mongo
     @Field("clientes")
     private Set<Cliente> clientes = new HashSet<>();
 
@@ -84,5 +85,26 @@ public class TipoDocumento implements Serializable {
     public void setEstado(@Nonnull Estado estado) {
         this.estado = estado;
     }
-}
 
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof TipoDocumento that)) return false;
+
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return "TipoDocumento{" +
+                "id='" + id + '\'' +
+                ", sigla='" + sigla + '\'' +
+                ", nombreDocumento='" + nombreDocumento + '\'' +
+                ", estado=" + estado +
+                '}';
+    }
+}
